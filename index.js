@@ -92,6 +92,20 @@ app.post('/webhook', (req, res) => {
         let text = event.message.text
         
 
+        var txt = "Hi";
+        if (text === "Hi"){
+          txt = "Hi, Do you want to buy or sell Bitcoin?"
+        }
+        else if (text === "buy" || text === "sell" ){
+          txt = "How many?"
+        }
+        else if (/^\d+$//.test(text)){
+          txt = "Where are you from?"
+        }
+        else{
+          txt = "Great. I will contact you soon for a deal. Thank you."
+        }
+
         sendText(sender, "Text echo: " + text.substring(0, 100))
             }
          }
