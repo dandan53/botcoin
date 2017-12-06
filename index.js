@@ -99,7 +99,8 @@ app.post('/webhook', (req, res) => {
         else if (text === "buy" || text === "sell" ){
           txt = "How many?"
         }
-        else if (/^\d+$//.test(text)){
+        //else if (/^\d+$//.test(text)){
+          else if (isNaN(i)){
           txt = "Where are you from?"
         }
         else{
