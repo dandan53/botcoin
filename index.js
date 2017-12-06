@@ -103,7 +103,7 @@ app.post('/webhook', (req, res) => {
           txt = "Where are you from?"
         }
         else{
-          txt = "Great. I will contact you soon for a deal. Thank you."
+          txt = "Great. I will contact you soon for a deal. Thank you!"
         }
 
         sendText(sender, "Text echo: " + text.substring(0, 100))
