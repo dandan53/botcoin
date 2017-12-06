@@ -80,7 +80,7 @@ app.post('/webhook', (req, res) => {
     logs += "  " + jsn;
 
     // Make sure this is a page subscription
-      //if (req.body.object === 'page') {
+      if (req.body.object === 'page') {
          let messaging_events = req.body.entry[0].messaging;
       
     
@@ -99,6 +99,7 @@ app.post('/webhook', (req, res) => {
       
       res.sendStatus(200)
       //res.send("message: " + jsn)
+    }
 
   
 });
