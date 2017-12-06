@@ -72,13 +72,13 @@ app.post('/webhook', (req, res) => {
     var jsn = JSON.stringify(req.body);
     console.log("webhook: " + jsn);
 
-    logs += jsn + "  ";
+    logs += "  " + jsn;
 
     // Make sure this is a page subscription
-      if (req.body.object === 'page') {
-          let messaging_events = req.body.entry[0].messaging;
+      //if (req.body.object === 'page') {
+         let messaging_events = req.body.entry[0].messaging;
       
-      
+    
       
         for (let i=0; i < messaging_events.length; i++){
         let event = messaging_events[i]
@@ -89,11 +89,13 @@ app.post('/webhook', (req, res) => {
 
         sendText(sender, "Text echo: " + text.substring(0, 100))
             }
-          }
+         }
        
       
-    res.sendStatus(200)
-  }
+      res.sendStatus(200)
+      //res.send("message: " + jsn)
+
+  
 });
 
 
