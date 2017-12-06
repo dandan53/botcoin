@@ -4,14 +4,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express().use(bodyParser.json()); // creates express http server
 
-
+var logs = "";
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 8080, () => console.log('webhook is listening'));
 
-
+/*
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
- 
+ let token = "EAAIEGSysBfwBAPymtNowHuqQaZAV8vpU87vf8lVc4dcI4ptgZCPP8wF6n3UZAEVcyCy1qOAHi6fQHOYFy7YGwcrq1h0UD1iEDfrtwH3WAEnENXRKJYrfZAlZAAR4N0CUZBv4DpRJu4l0uzWaJaNlIwqivXsY4alprFlMBiZC0eOjgZDZD"
   let body = req.body;
 
   // Checks this is an event from a page subscription
@@ -34,7 +34,7 @@ app.post('/webhook', (req, res) => {
   }
 
 });
-
+*/
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -72,29 +72,14 @@ app.post('/webhook', (req, res) => {
     var jsn = JSON.stringify(req.body);
     console.log("webhook: " + jsn);
 
+    logs += jsn + "  ";
+
     // Make sure this is a page subscription
       if (req.body.object === 'page') {
           let messaging_events = req.body.entry[0].messaging;
       
-      if (JSON.stringify(req.body).indexOf("optin") > 0)
-      {
-        let event = messaging_events[0]
-        let optin = event.optin;
-        let user_ref = optin.user_ref;
-        let product = optin.ref;
-
-        
-        console.log("webhook - product: " + product);
-
-
-        sendHi(user_ref, token, product)
-
-        sendAlert(user_ref, token, product)
-
-        addUser(user_ref)
-      }
-      else
-      {
+      
+      
         for (let i=0; i < messaging_events.length; i++){
         let event = messaging_events[i]
         let sender = event.sender.id
@@ -105,13 +90,11 @@ app.post('/webhook', (req, res) => {
         sendText(sender, "Text echo: " + text.substring(0, 100))
             }
           }
-      } 
-        }
-        else {
-
-        }
+       
+      
     res.sendStatus(200)
-};
+  }
+});
 
 
 function sendText(sender, text) {
@@ -141,4 +124,10 @@ app.get('/version', function(req, res) {
   console.log("get version - 1");
 
   res.send("version 1.0")
+})
+
+app.get('/logs', function(req, res) {
+  console.log("get version - 1");
+
+  res.send(logs)
 })
