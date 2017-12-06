@@ -93,7 +93,7 @@ app.post('/webhook', (req, res) => {
         
 
         var txt = "Hi";
-        if (text === "Hi"){
+        if (text === "Hi" || text === "hi"){
           txt = "Hi, Do you want to buy or sell Bitcoin?"
         }
         else if (text === "buy" || text === "sell" ){
@@ -142,6 +142,62 @@ function sendText(sender, text) {
   })
 }
 
+///////////////////// msg /////////////////////////////////////////
+
+
+var sendGenericAlert = function (sender) {
+     var messageData = buildGeneralMessageAlert();
+    if (messageData) {
+        sendMessage2(sender, messageData);
+    }
+}
+
+var buildGeneralMessageAlert = function () {
+    
+ var messageData =
+ {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":"What do you want to do next?",
+        "buttons":[
+          {
+            "type":"web_url",
+            "url":"https://chatbotcoins.herokuapp.com/version",
+            "title":"Visit Messenger"
+          }
+        ]
+      }
+    }
+  }
+
+    return messageData;
+
+};
+
+
+
+
+function sendMessage2(sender, messageData) {
+    request({
+      url: "https://graph.facebook.com/v2.6/me/messages",
+      qs: {access_token: token},
+        method: 'POST',
+         json: {
+        recipient: {id: sender},
+        message: messageData
+      }
+    }, function(error, response, body) {
+        console.log(body);
+        if (error) {
+            console.log(error);
+        }
+       // callback();
+    });
+}
+
+
 
 
 ////////////////////////// DEV /////////////////////////////////////
@@ -162,6 +218,13 @@ app.get('/logs', function(req, res) {
 app.get('/message', function(req, res) {
     console.log("get message");
 
-    sendText(1991939677488552, "token"); 
+   // sendText(1991939677488552, "token"); 
+    sendGenericAlert(1991939677488552);
     res.send("Done!")
+})
+
+app.get('/privacy', function(req, res) {
+  console.log("get version - 1");
+
+  res.send("version 1.0")
 })
