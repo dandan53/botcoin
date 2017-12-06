@@ -70,5 +70,5 @@ app.get('/webhook', (req, res) => {
 app.get('/version', function(req, res) {
   console.log("get version - 1");
 
-  res.send("version 1")
+  res.send("version 1.0")
 })
