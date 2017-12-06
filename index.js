@@ -2,16 +2,21 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const request = require('request');
+
 const app = express().use(bodyParser.json()); // creates express http server
 
 var logs = "";
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 8080, () => console.log('webhook is listening'));
 
+
+ let token = "EAAIEGSysBfwBAPymtNowHuqQaZAV8vpU87vf8lVc4dcI4ptgZCPP8wF6n3UZAEVcyCy1qOAHi6fQHOYFy7YGwcrq1h0UD1iEDfrtwH3WAEnENXRKJYrfZAlZAAR4N0CUZBv4DpRJu4l0uzWaJaNlIwqivXsY4alprFlMBiZC0eOjgZDZD";
+
+
 /*
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
- let token = "EAAIEGSysBfwBAPymtNowHuqQaZAV8vpU87vf8lVc4dcI4ptgZCPP8wF6n3UZAEVcyCy1qOAHi6fQHOYFy7YGwcrq1h0UD1iEDfrtwH3WAEnENXRKJYrfZAlZAAR4N0CUZBv4DpRJu4l0uzWaJaNlIwqivXsY4alprFlMBiZC0eOjgZDZD"
   let body = req.body;
 
   // Checks this is an event from a page subscription
@@ -106,14 +111,15 @@ function sendText(sender, text) {
     qs: {access_token: token},
     method: "POST",
     json: {
-      recipient: {user_ref: sender},
+      recipient: {id: sender},
       message: messageData
     }
   }, function(error, response, body){
       if (error){
-        console.log("sending error");
+        console.log("sending error - " + error);
       } else if (response.body.error){
-        console.log("response body error");
+        var jsn = JSON.stringify(response.body.error);
+        console.log("response body error - " + jsn);
     }
   })
 }
@@ -132,4 +138,12 @@ app.get('/logs', function(req, res) {
   console.log("get version - 1");
 
   res.send(logs)
+})
+
+
+app.get('/message', function(req, res) {
+    console.log("get message");
+
+    sendText(1991939677488552, "token"); 
+    res.send("Done!")
 })
