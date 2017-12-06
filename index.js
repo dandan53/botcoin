@@ -65,6 +65,76 @@ app.get('/webhook', (req, res) => {
 });
 
 
+app.post('/webhook', (req, res) => {
+    var now = new Date();
+    var jsonDate = now.toJSON();
+    console.log("post - webhook: " + jsonDate);
+    var jsn = JSON.stringify(req.body);
+    console.log("webhook: " + jsn);
+
+    // Make sure this is a page subscription
+      if (req.body.object === 'page') {
+          let messaging_events = req.body.entry[0].messaging;
+      
+      if (JSON.stringify(req.body).indexOf("optin") > 0)
+      {
+        let event = messaging_events[0]
+        let optin = event.optin;
+        let user_ref = optin.user_ref;
+        let product = optin.ref;
+
+        
+        console.log("webhook - product: " + product);
+
+
+        sendHi(user_ref, token, product)
+
+        sendAlert(user_ref, token, product)
+
+        addUser(user_ref)
+      }
+      else
+      {
+        for (let i=0; i < messaging_events.length; i++){
+        let event = messaging_events[i]
+        let sender = event.sender.id
+        if (event.message && event.message.text){
+        let text = event.message.text
+        
+
+        sendText(sender, "Text echo: " + text.substring(0, 100))
+            }
+          }
+      } 
+        }
+        else {
+
+        }
+    res.sendStatus(200)
+};
+
+
+function sendText(sender, text) {
+  let messageData = {text: text}
+  request({
+    url: "https://graph.facebook.com/v2.6/me/messages",
+    qs: {access_token: token},
+    method: "POST",
+    json: {
+      recipient: {user_ref: sender},
+      message: messageData
+    }
+  }, function(error, response, body){
+      if (error){
+        console.log("sending error");
+      } else if (response.body.error){
+        console.log("response body error");
+    }
+  })
+}
+
+
+
 ////////////////////////// DEV /////////////////////////////////////
 
 app.get('/version', function(req, res) {
