@@ -107,7 +107,9 @@ app.post('/webhook', (req, res) => {
           txt = "Great. I will contact you soon for a deal. Thank you!"
         }
 
-        sendText(sender, txt)
+        sendGenericAlert(sender)
+
+        //sendText(sender, txt)
 
         //sendText(sender, "Text echo: " + text.substring(0, 100))
             }
