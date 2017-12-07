@@ -332,7 +332,7 @@ function sendMessage2(sender, messageData) {
 app.get('/version', function(req, res) {
   console.log("get version - 1");
 
-  res.send("version 1.0")
+  res.send("version 1.1")
 })
 
 app.get('/logs', function(req, res) {
