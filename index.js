@@ -106,6 +106,7 @@ app.post('/webhook', (req, res) => {
         else{
           txt = "Great. I will contact you soon for a deal. Thank you!"
         }
+        
 
         if (text === "btn"){
 
@@ -115,11 +116,14 @@ app.post('/webhook', (req, res) => {
           sendGenericAlert(sender);
 
 
-                    sendGenericAlert1(sender);
+          sendGenericAlert1(sender);
 
         }
+        else
+        {
+        sendText(sender, txt)          
+        }
 
-        sendText(sender, txt)
 
         //sendText(sender, "Text echo: " + text.substring(0, 100))
             }
