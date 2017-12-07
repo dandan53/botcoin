@@ -11,6 +11,9 @@ var logs = "";
 app.listen(process.env.PORT || 8080, () => console.log('webhook is listening'));
 
 
+var usersToMessages = {};
+//associativeArray["one"] = "First";
+
  let token = "EAAIEGSysBfwBAPymtNowHuqQaZAV8vpU87vf8lVc4dcI4ptgZCPP8wF6n3UZAEVcyCy1qOAHi6fQHOYFy7YGwcrq1h0UD1iEDfrtwH3WAEnENXRKJYrfZAlZAAR4N0CUZBv4DpRJu4l0uzWaJaNlIwqivXsY4alprFlMBiZC0eOjgZDZD";
 
 
@@ -80,61 +83,103 @@ app.post('/webhook', (req, res) => {
     logs += "  " + jsn;
 
     // Make sure this is a page subscription
-      if (req.body.object === 'page') {
-         let messaging_events = req.body.entry[0].messaging;
-      
-    
+    if (req.body.object === 'page') {
+         let messaging_events = req.body.entry[0].messaging;   
       
         for (let i=0; i < messaging_events.length; i++){
-        let event = messaging_events[i]
-        let sender = event.sender.id
-        if (event.message && event.message.text){
-        let text = event.message.text
-        
-
-        var txt = "Hi";
-        if (text === "Hi" || text === "hi"){
-          txt = "Hi, Do you want to buy or sell Bitcoin?"
-        }
-        else if (text === "buy" || text === "sell" ){
-          txt = "How many?"
-        }
-        //else if (/^\d+$//.test(text)){
-          else if (isNaN(text)){
-          txt = "Where are you from?"
-        }
-        else{
-          txt = "Great. I will contact you soon for a deal. Thank you!"
-        }
-        
-
-        if (text === "btn"){
-
-          txt = "Hi!";
-          sendText(sender, txt);
-
-          sendGenericAlert(sender);
-
-
-          sendGenericAlert1(sender);
-
-        }
-        else
-        {
-        sendText(sender, txt)          
-        }
-
-
-        //sendText(sender, "Text echo: " + text.substring(0, 100))
+          let event = messaging_events[i]
+          let sender = event.sender.id
+          
+          if (event.message && event.message.text){
+            let text = event.message.text
+            
+            if ((sender in usersToMessages) === false){
+              // "HI", "BUYSELL", "AMOUNT", "LOCATION"
+                usersToMessages[sender] = "HI";
             }
-         }
-       
+
+            let state = usersToMessages[sender];
+
+            var txt = "";
+
+             switch(state) {
+              case "HI":
+                   txt = "Hi";
+                   sendText(sender, txt);
+
+                   sendGenericAlert(sender);
+
+                   usersToMessages[sender] = "BUYSELL";
+           
+                  break;
+              case "BUYSELL":
+                   txt = "How many bitcoins?";
+                   sendText(sender, txt);
+
+                   usersToMessages[sender] = "AMOUNT";
+
+                  break;
+              case "AMOUNT":
+                   txt = "Where are you from?";
+                   sendText(sender, txt);
+
+                   usersToMessages[sender] = "LOCATION";
+
+                  break;
+              case "LOCATION":
+                   txt = "We will search for you and get back to you. Thanks and goodbye!";
+                   sendText(sender, txt);
+
+                   usersToMessages[sender] = "LOCATION";
+
+                  break;
+              default:
+                   txt = "Thanks and goodbye.";
+                   sendText(sender, txt);
+
+                   delete usersToMessages[sender];
+              }
+              
+
+          } else if (event.postback && event.postback.payload){
+            let payload = event.postback.payload;
+            
+            switch(payload) {
+              case "buy":
+                   txt = "How many bitcoins?";
+                   sendText(sender, txt);
+
+                   usersToMessages[sender] = "BUYSELL";
+           
+                  break;
+              case "sell":
+                   txt = "How many bitcoins?";
+                   sendText(sender, txt);
+
+                   usersToMessages[sender] = "BUYSELL";
+
+                  break;
+              default:
+                 //"deault"
+              }
+          }
+
+          if (text === "btn"){
+
+            txt = "Hi!";
+            sendText(sender, txt);
+
+            sendGenericAlert(sender);
+
+          } else {
+            sendText(sender, txt)          
+          }
+         
       
       res.sendStatus(200)
       //res.send("message: " + jsn)
     }
-
-  
+    }  
 });
 
 
