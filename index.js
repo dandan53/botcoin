@@ -108,7 +108,15 @@ app.post('/webhook', (req, res) => {
         }
 
         if (text === "btn"){
-          sendGenericAlert(sender)          
+
+          txt = "Hi!";
+          sendText(sender, txt);
+
+          sendGenericAlert(sender);
+
+
+                    sendGenericAlert1(sender);
+
         }
 
         sendText(sender, txt)
@@ -149,6 +157,14 @@ function sendText(sender, text) {
 ///////////////////// msg /////////////////////////////////////////
 
 
+var sendGenericAlert1 = function (sender) {
+     var messageData = buildGeneralMessageAlert1();
+    if (messageData) {
+        sendMessage2(sender, messageData);
+    }
+}
+
+
 var sendGenericAlert = function (sender) {
      var messageData = buildGeneralMessageAlert();
     if (messageData) {
@@ -156,7 +172,65 @@ var sendGenericAlert = function (sender) {
     }
 }
 
+
 var buildGeneralMessageAlert = function () {
+    
+ var messageData =
+ {
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":"Do you want to buy or sell bitcoin?",
+        "buttons":[
+          {
+            "type":"postback",
+            "title":"BUY",
+            "payload":"buy"
+          },
+          {
+            "type":"postback",
+            "title":"SELL",
+            "payload":"sell"
+          }
+        ]
+      }
+    }
+  }
+
+    return messageData;
+
+};
+
+
+var buildGeneralMessageAlert1 = function () {
+    
+ var messageData =
+ {
+    
+      "payload":{
+        "template_type":"button",
+        "text":"Do you want to buy or sell bitcoin?",
+        "buttons":[
+          {
+            "type":"postback",
+            "title":"BUY",
+            "payload":"buy"
+          },
+          {
+            "type":"postback",
+            "title":"SELL",
+            "payload":"sell"
+          }
+        ]
+      }
+    }
+
+    return messageData;
+};
+
+
+var buildGeneralMessageAlert2 = function () {
     
  var messageData =
  {
