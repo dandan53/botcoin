@@ -100,14 +100,16 @@ app.post('/webhook', (req, res) => {
           txt = "How many?"
         }
         //else if (/^\d+$//.test(text)){
-          else if (isNaN(i)){
+          else if (isNaN(text)){
           txt = "Where are you from?"
         }
         else{
           txt = "Great. I will contact you soon for a deal. Thank you!"
         }
 
-        //sendGenericAlert(sender)
+        if (text === "btn"){
+          sendGenericAlert(sender)          
+        }
 
         sendText(sender, txt)
 
