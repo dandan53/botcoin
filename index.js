@@ -130,7 +130,7 @@ app.post('/webhook', (req, res) => {
                    txt = "We will search for you and get back to you. Thanks and goodbye!";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "LOCATION";
+                   delete usersToMessages[sender];
 
                   break;
               default:
