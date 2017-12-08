@@ -112,13 +112,13 @@ app.post('/webhook', (req, res) => {
                    usersToMessages[sender] = "BUYSELL";
            
                   break;
-              case "BUYSELL":
+            /*  case "BUYSELL":
                    txt = "How many bitcoins?";
                    sendText(sender, txt);
 
                    usersToMessages[sender] = "AMOUNT";
 
-                  break;
+                  break; */
               case "AMOUNT":
                    txt = "Where are you from?";
                    sendText(sender, txt);
@@ -160,14 +160,14 @@ app.post('/webhook', (req, res) => {
                    txt = "How many bitcoins?";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "BUYSELL";
+                   usersToMessages[sender] = "AMOUNT";
            
                   break;
               case "sell":
                    txt = "How many bitcoins?";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "BUYSELL";
+                   usersToMessages[sender] = "AMOUNT";
 
                   break;
               default:
