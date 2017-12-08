@@ -91,14 +91,15 @@ app.post('/webhook', (req, res) => {
           let sender = event.sender.id
           
           if (event.message && event.message.text){
-            let text = event.message.text
+            let text = event.message.text;
             
             if ((sender in usersToMessages) === false){
               // "HI", "BUYSELL", "AMOUNT", "LOCATION"
-                usersToMessages[sender] = "HI";
+                usersToMessages[sender] = {state: "HI", messages: []};
             }
 
-            let state = usersToMessages[sender];
+            usersToMessages[sender].push(text);
+            let state = usersToMessages[sender].state;
 
             var txt = "";
 
@@ -109,7 +110,7 @@ app.post('/webhook', (req, res) => {
 
                    sendGenericAlert(sender);
 
-                   usersToMessages[sender] = "BUYSELL";
+                   usersToMessages[sender].state = "BUYSELL";
            
                   break;
             /*  case "BUYSELL":
@@ -123,39 +124,41 @@ app.post('/webhook', (req, res) => {
                    txt = "Where are you from?";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "LOCATION";
+                   usersToMessages[sender].state = "LOCATION";
 
                   break;
               case "LOCATION":
                    txt = "We will search for you and get back to you. Thanks and goodbye!";
                    sendText(sender, txt);
 
-                   delete usersToMessages[sender];
+                   delete usersToMessages[sender].state;
 
                   break;
               default:
                    txt = "Thanks and goodbye.";
                    sendText(sender, txt);
 
-                   delete usersToMessages[sender];
+                   usersToMessages[sender].state = "DONE";
               }   
                           
           } else if (event.postback && event.postback.payload){
             let payload = event.postback.payload;
+            
+            usersToMessages[sender].push(payload);
             
             switch(payload) {
               case "buy":
                    txt = "How many bitcoins?";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "AMOUNT";
+                   usersToMessages[sender].state = "AMOUNT";
            
                   break;
               case "sell":
                    txt = "How many bitcoins?";
                    sendText(sender, txt);
 
-                   usersToMessages[sender] = "AMOUNT";
+                   usersToMessages[sender].state = "AMOUNT";
 
                   break;
               default:
@@ -318,7 +321,7 @@ app.get('/all', function(req, res) {
   var users = "";
 
   for(var key in usersToMessages) {
-    var sender = usersToMessages[key];
+    var sender = key;
 
     users += sender + ", ";
 
