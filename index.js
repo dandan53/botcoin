@@ -314,14 +314,19 @@ function sendMessage2(sender, messageData) {
 
 
 app.get('/all', function(req, res) {
+  
+  var users = "";
+
   for(var key in usersToMessages) {
     var sender = usersToMessages[key];
+
+    users += sender + ", ";
 
     var txt = "We have a match!";
     sendText(sender, txt);
  }
 
-  res.send("sent all")
+  res.send(users);
 })
 
 
