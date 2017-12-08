@@ -325,7 +325,7 @@ app.get('/all', function(req, res) {
 
     users += sender + ", ";
 
-    var txt = "We have a match!";
+    var txt = "We have a match! - " + usersToMessages[key].messages.toString();
     sendText(sender, txt);
  }
 
