@@ -139,6 +139,17 @@ app.post('/webhook', (req, res) => {
 
                    delete usersToMessages[sender];
               }
+
+              // Test
+              if (text === "btn"){
+                txt = "Hi!";
+                sendText(sender, txt);
+
+                sendGenericAlert(sender);
+
+              } else {
+                sendText(sender, txt)          
+          }
               
 
           } else if (event.postback && event.postback.payload){
@@ -162,17 +173,6 @@ app.post('/webhook', (req, res) => {
               default:
                  //"deault"
               }
-          }
-
-          if (text === "btn"){
-
-            txt = "Hi!";
-            sendText(sender, txt);
-
-            sendGenericAlert(sender);
-
-          } else {
-            sendText(sender, txt)          
           }
          
       
