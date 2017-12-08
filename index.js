@@ -138,20 +138,8 @@ app.post('/webhook', (req, res) => {
                    sendText(sender, txt);
 
                    delete usersToMessages[sender];
-              }
-
-              // Test
-              if (text === "btn"){
-                txt = "Hi!";
-                sendText(sender, txt);
-
-                sendGenericAlert(sender);
-
-              } else {
-                sendText(sender, txt)          
-          }
-              
-
+              }   
+                          
           } else if (event.postback && event.postback.payload){
             let payload = event.postback.payload;
             
