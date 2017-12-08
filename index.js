@@ -313,6 +313,16 @@ function sendMessage2(sender, messageData) {
 }
 
 
+app.get('/all', function(req, res) {
+  for(var key in usersToMessages) {
+    var sender = usersToMessages[key];
+
+    var txt = "We have a match!";
+    sendText(sender, txt);
+ }
+
+  res.send("sent all")
+})
 
 
 ////////////////////////// DEV /////////////////////////////////////
