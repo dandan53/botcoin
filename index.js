@@ -131,14 +131,14 @@ app.post('/webhook', (req, res) => {
                    txt = "We will search for you and get back to you. Thanks and goodbye!";
                    sendText(sender, txt);
 
-                   delete usersToMessages[sender].state;
+                   usersToMessages[sender].state = "DONE";
 
                   break;
               default:
                    txt = "Still looking for maching...";
                    sendText(sender, txt);
 
-                   usersToMessages[sender].state = "DONE";
+                   usersToMessages[sender].state = "HI";
               }   
                           
           } else if (event.postback && event.postback.payload){
