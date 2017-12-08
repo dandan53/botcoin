@@ -98,7 +98,7 @@ app.post('/webhook', (req, res) => {
                 usersToMessages[sender] = {state: "HI", messages: []};
             }
 
-            usersToMessages[sender].push(text);
+            usersToMessages[sender].messages.push(text);
             let state = usersToMessages[sender].state;
 
             var txt = "";
@@ -135,7 +135,7 @@ app.post('/webhook', (req, res) => {
 
                   break;
               default:
-                   txt = "Thanks and goodbye.";
+                   txt = "Still looking for maching...";
                    sendText(sender, txt);
 
                    usersToMessages[sender].state = "DONE";
@@ -144,8 +144,8 @@ app.post('/webhook', (req, res) => {
           } else if (event.postback && event.postback.payload){
             let payload = event.postback.payload;
             
-            usersToMessages[sender].push(payload);
-            
+            usersToMessages[sender].messages.push(payload);
+
             switch(payload) {
               case "buy":
                    txt = "How many bitcoins?";
