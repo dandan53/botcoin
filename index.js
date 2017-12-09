@@ -436,7 +436,7 @@ app.get('/db', (req, res, next) => {
     
     const results = [];
 
-  const data = {id: 1, state: "HI", messages: "hi what's up?"};
+  const data = {id: id, state: state, messages: messages};
   // Get a Postgres client from the connection pool
   pg.connect(connectionString, (err, client, done) => {
     // Handle connection errors
