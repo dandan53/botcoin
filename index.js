@@ -101,7 +101,7 @@ app.post('/webhook', (req, res) => {
             usersToMessages[sender].messages.push(text);
             let state = usersToMessages[sender].state;
 
-            addLog(sender, state, text);
+            //addLog(sender, state, text);
 
             var txt = "";
 
@@ -148,7 +148,7 @@ app.post('/webhook', (req, res) => {
             
             usersToMessages[sender].messages.push(payload);
 
-            addLog(sender, usersToMessages[sender].state, payload);
+            //addLog(sender, usersToMessages[sender].state, payload);
 
             switch(payload) {
               case "buy":
