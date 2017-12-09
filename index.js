@@ -101,6 +101,8 @@ app.post('/webhook', (req, res) => {
             usersToMessages[sender].messages.push(text);
             let state = usersToMessages[sender].state;
 
+            addLog(sender, state, text);
+
             var txt = "";
 
              switch(state) {
@@ -145,6 +147,8 @@ app.post('/webhook', (req, res) => {
             let payload = event.postback.payload;
             
             usersToMessages[sender].messages.push(payload);
+
+            addLog(sender, usersToMessages[sender].state, payload);
 
             switch(payload) {
               case "buy":
@@ -370,6 +374,33 @@ const pg = require('pg');
 //const connectionString = process.env.DATABASE_URL || 'postgres://postgres:dandan53@localhost:5432/botcoin';
 const connectionString = process.env.DATABASE_URL || 'postgres://wtnpettadssxlc:02fe4f223f93ac38b3c82cb2af1782008d5034948e5b879a4443ec75512473fd@ec2-107-20-191-76.compute-1.amazonaws.com:5432/daqercqmfkqqip?ssl=true';
 
+app.get('/db', (req, res, next) => {
+  const results = [];
+
+  const data = {id: 1, state: "HI", messages: "hi what's up?"};
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+   
+    // SQL Query > Select Data
+    const query = client.query('SELECT * FROM users ORDER BY id ASC');
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });
+  });
+});
+
 
   app.get('/insert', (req, res, next) => {
   const results = [];
@@ -384,8 +415,8 @@ const connectionString = process.env.DATABASE_URL || 'postgres://wtnpettadssxlc:
       return res.status(500).json({success: false, data: err});
     }
     // SQL Query > Insert Data
-   // client.query('INSERT INTO users(id, state, messages) values($1, $2, $3)',
-   // [data.id, data.state, data.messages]);
+    client.query('INSERT INTO users(id, state, messages) values($1, $2, $3)',
+    [data.id, data.state, data.messages]);
     // SQL Query > Select Data
     const query = client.query('SELECT * FROM users ORDER BY id ASC');
     // Stream results back one row at a time
@@ -399,3 +430,34 @@ const connectionString = process.env.DATABASE_URL || 'postgres://wtnpettadssxlc:
     });
   });
 });
+
+  function addLog(id, state, messages) {
+    console.log("addLog. id: " + id);
+    
+    const results = [];
+
+  const data = {id: 1, state: "HI", messages: "hi what's up?"};
+  // Get a Postgres client from the connection pool
+  pg.connect(connectionString, (err, client, done) => {
+    // Handle connection errors
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    // SQL Query > Insert Data
+    client.query('INSERT INTO users(id, state, messages) values($1, $2, $3)',
+    [data.id, data.state, data.messages]);
+    // SQL Query > Select Data
+   // const query = client.query('SELECT * FROM users ORDER BY id ASC');
+    // Stream results back one row at a time
+   /* query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });*/
+  });
+};
