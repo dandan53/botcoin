@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const path = require('path');
 
 const app = express().use(bodyParser.json()); // creates express http server
 
@@ -17,32 +18,15 @@ var usersToMessages = {};
  let token = "EAAIEGSysBfwBAPymtNowHuqQaZAV8vpU87vf8lVc4dcI4ptgZCPP8wF6n3UZAEVcyCy1qOAHi6fQHOYFy7YGwcrq1h0UD1iEDfrtwH3WAEnENXRKJYrfZAlZAAR4N0CUZBv4DpRJu4l0uzWaJaNlIwqivXsY4alprFlMBiZC0eOjgZDZD";
 
 
-/*
-// Creates the endpoint for our webhook 
-app.post('/webhook', (req, res) => {  
-  let body = req.body;
-
-  // Checks this is an event from a page subscription
-  if (body.object === 'page') {
-
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
-
-      // Gets the message. entry.messaging is an array, but 
-      // will only ever contain one message, so we get index 0
-      let webhookEvent = entry.messaging[0];
-      console.log(webhookEvent);
-    });
-
-    // Returns a '200 OK' response to all requests
-    res.status(200).send('EVENT_RECEIVED');
-  } else {
-    // Returns a '404 Not Found' if event is not from a page subscription
-    res.sendStatus(404);
-  }
-
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
-*/
+
+app.get('/privacy', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/html/privacy.html'));
+});
+
+
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -355,7 +339,6 @@ app.get('/version', function(req, res) {
 app.get('/logs', function(req, res) {
   console.log("get version - 1");
 
- //dbCtrl.main();
  insertToDB(111, "Dddd", "Weww", function(res){
       console.log("insertDB: " + JSON.stringify(res));
   });
@@ -367,7 +350,6 @@ app.get('/logs', function(req, res) {
 app.get('/message', function(req, res) {
     console.log("get message");
 
-   // sendText(1991939677488552, "token"); 
     sendGenericAlert(1991939677488552);
     res.send("Done!")
 })
@@ -447,7 +429,12 @@ app.get('/db', (req, res, next) => {
 });
 
 
-  app.get('/insert', (req, res, next) => {
+  
+
+
+/////////////////// OLD /////////////////////////
+
+app.get('/insert', (req, res, next) => {
   const results = [];
 
   const data = {id: 1, state: "HI", messages: "hi what's up?"};
@@ -476,33 +463,31 @@ app.get('/db', (req, res, next) => {
   });
 });
 
-  function addLog1(id, state, messages) {
-    console.log("addLog. id: " + id);
-    
-    const results = [];
 
-  const data = {id: id, state: state, messages: messages};
-  // Get a Postgres client from the connection pool
-  pg.connect(connectionString, (err, client, done) => {
-    // Handle connection errors
-    if(err) {
-      done();
-      console.log(err);
-      return res.status(500).json({success: false, data: err});
-    }
-    // SQL Query > Insert Data
-    client.query('INSERT INTO users(id, state, messages) values($1, $2, $3)',
-    [data.id, data.state, data.messages]);
-    // SQL Query > Select Data
-   // const query = client.query('SELECT * FROM users ORDER BY id ASC');
-    // Stream results back one row at a time
-   /* query.on('row', (row) => {
-      results.push(row);
+
+/*
+// Creates the endpoint for our webhook 
+app.post('/webhook', (req, res) => {  
+  let body = req.body;
+
+  // Checks this is an event from a page subscription
+  if (body.object === 'page') {
+
+    // Iterates over each entry - there may be multiple if batched
+    body.entry.forEach(function(entry) {
+
+      // Gets the message. entry.messaging is an array, but 
+      // will only ever contain one message, so we get index 0
+      let webhookEvent = entry.messaging[0];
+      console.log(webhookEvent);
     });
-    // After all data is returned, close connection and return results
-    query.on('end', () => {
-      done();
-      return res.json(results);
-    });*/
-  });
-};
+
+    // Returns a '200 OK' response to all requests
+    res.status(200).send('EVENT_RECEIVED');
+  } else {
+    // Returns a '404 Not Found' if event is not from a page subscription
+    res.sendStatus(404);
+  }
+
+});
+*/
